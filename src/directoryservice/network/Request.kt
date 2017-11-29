@@ -5,6 +5,7 @@ import directoryservice.filesystem.Hashing
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.net.Socket
+import java.time.Instant
 
 class Request(var clientSocket: Socket) : Runnable {
 
@@ -33,17 +34,31 @@ class Request(var clientSocket: Socket) : Runnable {
     }
 
     private fun processRead(packet: ReadRequest) {
-        val key = packet.path.hashCode()
-        val servers = Hashing.getClosest(key)
-        respond(ReadResponse(key, servers))
+        if (packet.isDir) {
+            val node = DirectoryService.state.root.findNode(packet.path, packet.isDir)
+            val list = ArrayList(node.children.keys)
+            respond(ListResponse(list))
+        } else {
+            val key = packet.path.hashCode()
+            val servers = Hashing.getClosest(key)
+            respond(ReadResponse(key, servers))
+        }
     }
 
     private fun processWrite(packet: WriteRequest) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val key = packet.path.hashCode()
+        val servers = Hashing.getClosest(key)
+        // Create file/dir in tree and update timestamp
+        DirectoryService.state.root.findNode(packet.path, packet.isDir).timestamp = Instant.now()
+        respond(WriteResponse(key, servers))
     }
 
     private fun processDelete(packet: DeleteRequest) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val parentPath = packet.path.subSequence(0, packet.path.lastIndexOf("/")) as String
+        val child = packet.path.subSequence(packet.path.lastIndexOf("/"), packet.path.length)
+        val parent = DirectoryService.state.root.findNode(parentPath, true)
+        parent.children.remove(child)
+        respond(DeleteResponse(true))
     }
 
     private fun respond(packet: Any) {
