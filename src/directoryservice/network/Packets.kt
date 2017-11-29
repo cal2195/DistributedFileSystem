@@ -22,4 +22,4 @@ data class WriteResponse(val hash: Int, val servers: Pair<ConnectionAddress?, Co
 
 data class DeleteRequest(val path: String) : Serializable
 
-data class DeleteResponse(val success: Boolean) : Serializable
+data class DeleteResponse(val hash: Int, val servers: Pair<ConnectionAddress?, ConnectionAddress?>) : Serializable

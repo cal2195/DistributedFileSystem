@@ -58,7 +58,11 @@ class Request(var clientSocket: Socket) : Runnable {
         val child = packet.path.subSequence(packet.path.lastIndexOf("/"), packet.path.length)
         val parent = DirectoryService.state.root.findNode(parentPath, true)
         parent.children.remove(child)
-        respond(DeleteResponse(true))
+
+        val key = packet.path.hashCode()
+        val servers = Hashing.getClosest(key)
+
+        respond(DeleteResponse(key, servers))
     }
 
     private fun respond(packet: Any) {
