@@ -14,7 +14,7 @@ class Connections(val port: Int) {
             var clientSocket = serverSocket.accept()
             println("New Connection!")
 
-
+            Thread(Request(clientSocket)).start()
         }
     }
 }
