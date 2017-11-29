@@ -27,5 +27,8 @@ class Node {
             }
             else -> State()
         }
+
+        val data = File("data")
+        data.mkdir()
     }
 }

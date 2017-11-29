@@ -12,4 +12,9 @@ class Data {
         val file = File("data/$hash")
         return file.writeBytes(data)
     }
+
+    fun deleteData(hash: Int): Boolean {
+        val file = File("data/$hash")
+        return file.delete()
+    }
 }
