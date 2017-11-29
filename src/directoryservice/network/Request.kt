@@ -29,7 +29,7 @@ class Request(var clientSocket: Socket) : Runnable {
     }
 
     private fun processJoin(packet: JoinRequest) {
-        DirectoryService.state.servers.put(packet.key, clientSocket.inetAddress)
+        DirectoryService.state.servers.put(packet.key, packet.address)
         respond(JoinResponse(true))
     }
 

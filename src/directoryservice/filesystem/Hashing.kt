@@ -1,14 +1,14 @@
 package directoryservice.filesystem
 
 import directoryservice.DirectoryService
+import directoryservice.network.ConnectionAddress
 import java.lang.Math.abs
-import java.net.InetAddress
 
 object Hashing {
 
-    fun getClosest(pathKey: Int): Pair<InetAddress?, InetAddress?> {
-        var min1: Pair<Int, InetAddress>? = null
-        var min2: Pair<Int, InetAddress>? = null
+    fun getClosest(pathKey: Int): Pair<ConnectionAddress?, ConnectionAddress?> {
+        var min1: Pair<Int, ConnectionAddress>? = null
+        var min2: Pair<Int, ConnectionAddress>? = null
 
         for ((key, server) in DirectoryService.state.servers) {
             if (min1 == null) {

@@ -1,11 +1,11 @@
 package directoryservice
 
 import directoryservice.filesystem.File
+import directoryservice.network.ConnectionAddress
 import java.io.Serializable
-import java.net.InetAddress
 import kotlin.collections.HashMap
 
 class State: Serializable {
     val root = File("/", true)
-    val servers = HashMap<Int, InetAddress>()
+    val servers = HashMap<Int, ConnectionAddress>()
 }
