@@ -1,6 +1,7 @@
 package directoryservice.network
 
 import directoryservice.DirectoryService
+import directoryservice.filesystem.Hashing
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.net.Socket
@@ -32,7 +33,9 @@ class Request(var clientSocket: Socket) : Runnable {
     }
 
     private fun processRead(packet: ReadRequest) {
-
+        val key = packet.path.hashCode()
+        val servers = Hashing.getClosest(key)
+        respond(ReadResponse(key, servers))
     }
 
     private fun processWrite(packet: WriteRequest) {

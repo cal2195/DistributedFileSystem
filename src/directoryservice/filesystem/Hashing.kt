@@ -4,11 +4,9 @@ import directoryservice.DirectoryService
 import java.lang.Math.abs
 import java.net.InetAddress
 
-class Hashing {
+object Hashing {
 
-    fun getClosest(path: String): Pair<InetAddress?, InetAddress?> {
-        val pathKey = path.hashCode()
-
+    fun getClosest(pathKey: Int): Pair<InetAddress?, InetAddress?> {
         var min1: Pair<Int, InetAddress>? = null
         var min2: Pair<Int, InetAddress>? = null
 
