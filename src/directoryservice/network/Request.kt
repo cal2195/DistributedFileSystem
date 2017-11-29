@@ -29,6 +29,7 @@ class Request(var clientSocket: Socket) : Runnable {
     }
 
     private fun processJoin(packet: JoinRequest) {
+        println("Processing Join Packet")
         DirectoryService.state.servers.put(packet.key, packet.address)
         respond(JoinResponse(true))
     }
@@ -66,8 +67,10 @@ class Request(var clientSocket: Socket) : Runnable {
     }
 
     private fun respond(packet: Any) {
+        println("Responding...")
         outputStream.writeObject(packet)
         outputStream.flush()
         outputStream.close()
+        println("Closed connection!")
     }
 }

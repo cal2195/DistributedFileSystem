@@ -1,8 +1,9 @@
 package directoryservice.filesystem
 
+import java.io.Serializable
 import java.time.Instant
 
-class File(name: String, isDir: Boolean) {
+class File(name: String, isDir: Boolean) : Serializable {
     var children = HashMap<String, File>()
 
     var timestamp = Instant.now()
@@ -12,7 +13,7 @@ class File(name: String, isDir: Boolean) {
         return findNode(paths, dir)
     }
 
-    fun findNode(path: List<String>, dir: Boolean) : File {
+    private fun findNode(path: List<String>, dir: Boolean) : File {
         if (path.isEmpty()) return this
 
         var child = children[path[0]]

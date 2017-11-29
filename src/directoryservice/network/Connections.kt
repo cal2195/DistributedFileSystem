@@ -2,11 +2,11 @@ package directoryservice.network
 
 import java.net.ServerSocket
 
-class Connections(val port: Int) {
+object Connections {
 
     lateinit var serverSocket: ServerSocket
 
-    fun listen() {
+    fun listen(port: Int) {
         serverSocket = ServerSocket(port)
         println("Listening on $port")
         while (true) {
@@ -14,7 +14,7 @@ class Connections(val port: Int) {
             var clientSocket = serverSocket.accept()
             println("New Connection!")
 
-
+            Thread(Request(clientSocket)).start()
         }
     }
 }

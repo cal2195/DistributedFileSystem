@@ -2,7 +2,6 @@ package directoryservice.network
 
 
 import java.io.Serializable
-import java.net.InetAddress
 
 data class ConnectionAddress(val address: String, val port: Int) : Serializable
 

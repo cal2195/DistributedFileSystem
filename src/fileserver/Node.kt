@@ -5,11 +5,13 @@ import java.io.FileOutputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 
-class Node {
+class Node(val serverAddress: String, val address: String, val port: Int) {
     lateinit var state: State
 
     init {
         loadState()
+        Connections.announce(serverAddress, address, port, state.key)
+        Connections.listen(port)
     }
 
     fun saveState() {
