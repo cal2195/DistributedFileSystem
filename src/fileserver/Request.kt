@@ -21,25 +21,25 @@ class Request(var clientSocket: Socket) : Runnable {
         var packet = inputStream.readObject()
 
         when (packet) {
-            is ReadRequest -> processRead(packet)
-            is WriteRequest -> processWrite(packet)
-            is DeleteRequest -> processDelete(packet)
+            is NodeReadRequest -> processRead(packet)
+            is NodeWriteRequest -> processWrite(packet)
+            is NodeDeleteRequest -> processDelete(packet)
         }
     }
 
-    private fun processRead(packet: ReadRequest) {
-        val response = ReadResponse(data.getData(packet.hash))
+    private fun processRead(packet: NodeReadRequest) {
+        val response = NodeReadResponse(data.getData(packet.hash))
         respond(response)
     }
 
-    private fun processWrite(packet: WriteRequest) {
+    private fun processWrite(packet: NodeWriteRequest) {
         data.writeData(packet.hash, packet.data)
-        val response = WriteResponse(true)
+        val response = NodeWriteResponse(true)
         respond(response)
     }
 
-    private fun processDelete(packet: DeleteRequest) {
-        val response = DeleteResponse(data.deleteData(packet.hash))
+    private fun processDelete(packet: NodeDeleteRequest) {
+        val response = NodeDeleteResponse(data.deleteData(packet.hash))
         respond(response)
     }
 

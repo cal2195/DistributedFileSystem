@@ -2,14 +2,16 @@ package fileserver.packets
 
 import java.io.Serializable
 
-data class ReadRequest(val hash: Int) : Serializable
+open class NodePacket
 
-data class ReadResponse(val data: ByteArray) : Serializable
+data class NodeReadRequest(val hash: Int) : Serializable, NodePacket()
 
-data class WriteRequest(val hash: Int, val data: ByteArray) : Serializable
+data class NodeReadResponse(val data: ByteArray) : Serializable, NodePacket()
 
-data class WriteResponse(val success: Boolean) : Serializable
+data class NodeWriteRequest(val hash: Int, val data: ByteArray) : Serializable, NodePacket()
 
-data class DeleteRequest(val hash: Int) : Serializable
+data class NodeWriteResponse(val success: Boolean) : Serializable, NodePacket()
 
-data class DeleteResponse(val success: Boolean) : Serializable
+data class NodeDeleteRequest(val hash: Int) : Serializable, NodePacket()
+
+data class NodeDeleteResponse(val success: Boolean) : Serializable, NodePacket()

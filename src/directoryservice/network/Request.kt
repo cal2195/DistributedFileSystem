@@ -21,40 +21,56 @@ class Request(var clientSocket: Socket) : Runnable {
         var packet = inputStream.readObject()
 
         when (packet) {
-            is JoinRequest -> processJoin(packet)
-            is ReadRequest -> processRead(packet)
-            is WriteRequest -> processWrite(packet)
-            is DeleteRequest -> processDelete(packet)
+            is DirJoinRequest -> processJoin(packet)
+            is DirAttrRequest -> processAttr(packet)
+            is DirReadRequest -> processRead(packet)
+            is DirWriteRequest -> processWrite(packet)
+            is DirDeleteRequest -> processDelete(packet)
         }
     }
 
-    private fun processJoin(packet: JoinRequest) {
-        println("Processing Join Packet")
-        DirectoryService.state.servers.put(packet.key, packet.address)
-        respond(JoinResponse(true))
+    private fun processAttr(packet: DirAttrRequest) {
+        val node = DirectoryService.state.root.maybeFindNode(packet.path)
+        println("Found attr node $node for ${packet.path}")
+        if (node == null) {
+            respond(DirAttrResponse(null))
+        } else {
+            respond(DirAttrResponse(node.attr))
+        }
     }
 
-    private fun processRead(packet: ReadRequest) {
+    private fun processJoin(packet: DirJoinRequest) {
+        println("Processing Join DirPacket")
+        DirectoryService.state.servers.put(packet.key, packet.address)
+        respond(DirJoinResponse(true))
+    }
+
+    private fun processRead(packet: DirReadRequest) {
         if (packet.isDir) {
             val node = DirectoryService.state.root.findNode(packet.path, packet.isDir)
             val list = ArrayList(node.children.keys)
-            respond(ListResponse(list))
+            println("Listing dir ${packet.path}")
+            respond(DirListResponse(list))
         } else {
             val key = packet.path.hashCode()
             val servers = Hashing.getClosest(key)
-            respond(ReadResponse(key, servers))
+            println("Returing servers for ${packet.path}")
+            respond(DirReadResponse(key, servers))
         }
     }
 
-    private fun processWrite(packet: WriteRequest) {
+    private fun processWrite(packet: DirWriteRequest) {
         val key = packet.path.hashCode()
         val servers = Hashing.getClosest(key)
         // Create file/dir in tree and update timestamp
-        DirectoryService.state.root.findNode(packet.path, packet.isDir).timestamp = Instant.now()
-        respond(WriteResponse(key, servers))
+        val node = DirectoryService.state.root.findNode(packet.path, packet.isDir)
+        node.attr.timestamp = Instant.now()
+        node.attr.size = packet.size
+        println("Created file/dir for ${packet.path}")
+        respond(DirWriteResponse(key, servers))
     }
 
-    private fun processDelete(packet: DeleteRequest) {
+    private fun processDelete(packet: DirDeleteRequest) {
         val parentPath = packet.path.subSequence(0, packet.path.lastIndexOf("/")) as String
         val child = packet.path.subSequence(packet.path.lastIndexOf("/"), packet.path.length)
         val parent = DirectoryService.state.root.findNode(parentPath, true)
@@ -63,7 +79,7 @@ class Request(var clientSocket: Socket) : Runnable {
         val key = packet.path.hashCode()
         val servers = Hashing.getClosest(key)
 
-        respond(DeleteResponse(key, servers))
+        respond(DirDeleteResponse(key, servers))
     }
 
     private fun respond(packet: Any) {

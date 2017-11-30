@@ -2,8 +2,8 @@ package fileserver
 
 import SERVER_PORT
 import directoryservice.network.ConnectionAddress
-import directoryservice.network.JoinRequest
-import directoryservice.network.JoinResponse
+import directoryservice.network.DirJoinRequest
+import directoryservice.network.DirJoinResponse
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.net.ServerSocket
@@ -29,11 +29,11 @@ object Connections {
         val socket = Socket(serverAddress, SERVER_PORT)
         val output = ObjectOutputStream(socket.getOutputStream())
         println("Announcing to dir server!")
-        output.writeObject(JoinRequest(key, ConnectionAddress(address, port)))
+        output.writeObject(DirJoinRequest(key, ConnectionAddress(address, port)))
         output.flush()
         println("Awaiting response!")
         val input = ObjectInputStream(socket.getInputStream())
-        val response = input.readObject() as JoinResponse
+        val response = input.readObject() as DirJoinResponse
         println("Success?: ${response.success}")
         return response.success
     }

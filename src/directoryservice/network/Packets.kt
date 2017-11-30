@@ -1,24 +1,31 @@
 package directoryservice.network
 
 
+import directoryservice.filesystem.Attr
 import java.io.Serializable
 
-data class ConnectionAddress(val address: String, val port: Int) : Serializable
+open class DirPacket
 
-data class JoinRequest(val key: Int, val address: ConnectionAddress) : Serializable
+data class ConnectionAddress(val address: String, val port: Int) : Serializable, DirPacket()
 
-data class JoinResponse(val success: Boolean) : Serializable
+data class DirJoinRequest(val key: Int, val address: ConnectionAddress) : Serializable, DirPacket()
 
-data class ReadRequest(val path: String, val isDir: Boolean) : Serializable
+data class DirJoinResponse(val success: Boolean) : Serializable, DirPacket()
 
-data class ReadResponse(val hash: Int, val servers: Pair<ConnectionAddress?, ConnectionAddress?>) : Serializable
+data class DirAttrRequest(val path: String) : Serializable, DirPacket()
 
-data class ListResponse(val files: ArrayList<String>) : Serializable
+data class DirAttrResponse(val attr: Attr?) : Serializable, DirPacket()
 
-data class WriteRequest(val path: String, val isDir: Boolean) : Serializable
+data class DirReadRequest(val path: String, val isDir: Boolean) : Serializable, DirPacket()
 
-data class WriteResponse(val hash: Int, val servers: Pair<ConnectionAddress?, ConnectionAddress?>): Serializable
+data class DirReadResponse(val hash: Int, val servers: Pair<ConnectionAddress?, ConnectionAddress?>) : Serializable, DirPacket()
 
-data class DeleteRequest(val path: String) : Serializable
+data class DirListResponse(val files: ArrayList<String>) : Serializable, DirPacket()
 
-data class DeleteResponse(val hash: Int, val servers: Pair<ConnectionAddress?, ConnectionAddress?>) : Serializable
+data class DirWriteRequest(val path: String, val isDir: Boolean, val size: Long) : Serializable, DirPacket()
+
+data class DirWriteResponse(val hash: Int, val servers: Pair<ConnectionAddress?, ConnectionAddress?>): Serializable, DirPacket()
+
+data class DirDeleteRequest(val path: String) : Serializable, DirPacket()
+
+data class DirDeleteResponse(val hash: Int, val servers: Pair<ConnectionAddress?, ConnectionAddress?>) : Serializable, DirPacket()
