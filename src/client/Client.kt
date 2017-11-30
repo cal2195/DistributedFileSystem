@@ -1,13 +1,18 @@
 package client
 
+import api.FileSystemApi
+import directoryservice.network.ConnectionAddress
 import java.io.File
 
+class Client {
+    fun init(path: String, address: ConnectionAddress) {
+        var mountPoint = File(path)
+        mountPoint.mkdir()
 
-fun main(args: Array<String>) {
+        var cache = File("cache")
+        cache.mkdir()
 
-    var mountPoint = File("mount")
-    mountPoint.mkdir()
-
-    var fuse = Fuse()
-    fuse.mount(mountPoint)
+        var fuse = Fuse(FileSystemApi(address))
+        fuse.mount(mountPoint)
+    }
 }
