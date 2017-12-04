@@ -11,6 +11,7 @@ class Client {
 
         var cache = File("cache")
         cache.mkdir()
+        cache.listFiles().forEach { it.deleteRecursively() }
 
         var fuse = Fuse(FileSystemApi(address))
         fuse.mount(mountPoint)

@@ -69,7 +69,7 @@ class Request(var clientSocket: Socket) : Runnable {
 
     private fun processDelete(packet: DirDeleteRequest) {
         val parentPath = packet.path.subSequence(0, packet.path.lastIndexOf("/")) as String
-        val child = packet.path.subSequence(packet.path.lastIndexOf("/"), packet.path.length)
+        val child = packet.path.subSequence(packet.path.lastIndexOf("/") + 1, packet.path.length)
         val parent = DirectoryService.state.root.findNode(parentPath, true)
         parent.children.remove(child)
 

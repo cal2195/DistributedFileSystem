@@ -80,6 +80,16 @@ class Fuse(val api: FileSystemApi) : FuseFilesystemAdapterFull() {
         return bufSize.toInt()
     }
 
+    override fun unlink(path: String): Int {
+        api.rm(path)
+        return 0
+    }
+
+    override fun rmdir(path: String): Int {
+        api.rmdir(path)
+        return 0
+    }
+
     override fun opendir(path: String, info: StructFuseFileInfo.FileInfoWrapper): Int {
         return 0
     }
@@ -110,6 +120,11 @@ class Fuse(val api: FileSystemApi) : FuseFilesystemAdapterFull() {
         if (info.openMode() != StructFuseFileInfo.FileInfoWrapper.OpenMode.READONLY) {
             api.close(path)
         }
+        return 0
+    }
+
+    override fun truncate(path: String, offset: Long): Int {
+        api.truncate(path)
         return 0
     }
 }

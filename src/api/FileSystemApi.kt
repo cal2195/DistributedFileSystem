@@ -40,8 +40,13 @@ class FileSystemApi(val dirServerAddress: ConnectionAddress) {
 
     fun write(path: String, data: ByteArray) {
         val file = File("cache$path")
-        file.mkdirs()
+        file.parentFile.mkdirs()
         file.appendBytes(data)
+    }
+
+    fun truncate(path: String) {
+        val file = File("cache$path")
+        file.delete()
     }
 
     fun close(path: String) {
