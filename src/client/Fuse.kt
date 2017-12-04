@@ -54,11 +54,11 @@ class Fuse(val api: FileSystemApi) : FuseFilesystemAdapterFull() {
 
         //if current file is of Directory
         else if (f.isDirectory) {
-            stat.setMode(TypeMode.NodeType.DIRECTORY);
-            return 0;
+            stat.setMode(TypeMode.NodeType.DIRECTORY)
+            return 0
         }
 
-        return -ErrorCodes.ENOENT();
+        return -ErrorCodes.ENOENT()
     }
 
     override fun read(path: String, buffer: ByteBuffer, size: Long, offset: Long, info: StructFuseFileInfo.FileInfoWrapper): Int {
@@ -73,6 +73,10 @@ class Fuse(val api: FileSystemApi) : FuseFilesystemAdapterFull() {
     }
 
     override fun write(path: String, buf: ByteBuffer, bufSize: Long, writeOffset: Long, wrapper: StructFuseFileInfo.FileInfoWrapper): Int {
+        if (writeOffset == 0L) {
+            api.truncate(path)
+        }
+
         val b = ByteArray(bufSize.toInt())
         buf.get(b)
 
