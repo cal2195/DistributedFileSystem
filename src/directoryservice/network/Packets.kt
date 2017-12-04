@@ -18,7 +18,7 @@ data class DirAttrResponse(val attr: Attr?) : Serializable, DirPacket()
 
 data class DirReadRequest(val path: String, val isDir: Boolean) : Serializable, DirPacket()
 
-data class DirReadResponse(val hash: Int, val servers: Pair<ConnectionAddress?, ConnectionAddress?>) : Serializable, DirPacket()
+data class DirReadResponse(val hash: Int, val attr: Attr, val servers: Pair<ConnectionAddress?, ConnectionAddress?>) : Serializable, DirPacket()
 
 data class DirListResponse(val files: ArrayList<String>) : Serializable, DirPacket()
 

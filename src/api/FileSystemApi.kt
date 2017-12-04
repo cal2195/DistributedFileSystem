@@ -8,6 +8,8 @@ import java.util.*
 
 class FileSystemApi(val dirServerAddress: ConnectionAddress) {
 
+    val cache = Cache()
+
     fun getAttr(path: String): Attr? {
         val dirResponse = Connection.dirRequest(DirAttrRequest(path), dirServerAddress) as DirAttrResponse
         return dirResponse.attr
@@ -15,9 +17,19 @@ class FileSystemApi(val dirServerAddress: ConnectionAddress) {
 
     fun read(path: String): ByteArray {
         val dirResponse = Connection.dirRequest(DirReadRequest(path, false), dirServerAddress) as DirReadResponse
-        val address = Helper.pickAddress(dirResponse.servers) ?: return kotlin.ByteArray(0)
-        val response = Connection.nodeRequest(NodeReadRequest(dirResponse.hash), address) as NodeReadResponse
-        return response.data
+
+        val cached = cache.getTimestamp(dirResponse.hash)
+
+        if (cached == null || cached.isBefore(dirResponse.attr.timestamp)) {
+            println("Cache miss for $path")
+            val address = Helper.pickAddress(dirResponse.servers) ?: return kotlin.ByteArray(0)
+            val response = Connection.nodeRequest(NodeReadRequest(dirResponse.hash), address) as NodeReadResponse
+            cache.writeBytes(path, response.data, dirResponse.attr.timestamp)
+            return response.data
+        }
+
+        println("Cache hit for $path")
+        return cache.readBytes(dirResponse.hash) ?: ByteArray(0)
     }
 
     fun create(path: String) {

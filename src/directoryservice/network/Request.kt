@@ -32,11 +32,7 @@ class Request(var clientSocket: Socket) : Runnable {
     private fun processAttr(packet: DirAttrRequest) {
         val node = DirectoryService.state.root.maybeFindNode(packet.path)
         println("Found attr node $node for ${packet.path}")
-        if (node == null) {
-            respond(DirAttrResponse(null))
-        } else {
-            respond(DirAttrResponse(node.attr))
-        }
+        respond(DirAttrResponse(node?.attr))
     }
 
     private fun processJoin(packet: DirJoinRequest) {
@@ -54,8 +50,9 @@ class Request(var clientSocket: Socket) : Runnable {
         } else {
             val key = packet.path.hashCode()
             val servers = Hashing.getClosest(key)
+            val node = DirectoryService.state.root.maybeFindNode(packet.path)
             println("Returing servers for ${packet.path}")
-            respond(DirReadResponse(key, servers))
+            respond(DirReadResponse(key, node!!.attr, servers))
         }
     }
 

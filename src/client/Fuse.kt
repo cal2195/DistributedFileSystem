@@ -25,13 +25,13 @@ class Fuse(val api: FileSystemApi) : FuseFilesystemAdapterFull() {
             0
         } else {
             stat.setMode(TypeMode.NodeType.FILE, true, true, true, true, true, true, true, true, true)
-                stat.size(attr.size)
-                stat.atime(attr.timestamp.epochSecond)
-                stat.mtime(0)
-                stat.nlink(1)
-                stat.uid(0)
-                stat.gid(0)
-                stat.blocks(((attr.size + 511L) / 512L))
+            stat.size(attr.size)
+            stat.atime(attr.timestamp.epochSecond)
+            stat.mtime(0)
+            stat.nlink(1)
+            stat.uid(0)
+            stat.gid(0)
+            stat.blocks(((attr.size + 511L) / 512L))
             0
         }
     }
@@ -53,8 +53,7 @@ class Fuse(val api: FileSystemApi) : FuseFilesystemAdapterFull() {
         }
 
         //if current file is of Directory
-        else if(f.isDirectory)
-        {
+        else if (f.isDirectory) {
             stat.setMode(TypeMode.NodeType.DIRECTORY);
             return 0;
         }
@@ -108,7 +107,9 @@ class Fuse(val api: FileSystemApi) : FuseFilesystemAdapterFull() {
     }
 
     override fun release(path: String, info: StructFuseFileInfo.FileInfoWrapper): Int {
-        api.close(path)
+        if (info.openMode() != StructFuseFileInfo.FileInfoWrapper.OpenMode.READONLY) {
+            api.close(path)
+        }
         return 0
     }
 }
