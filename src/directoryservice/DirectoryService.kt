@@ -1,7 +1,5 @@
 package directoryservice
 
-import SERVER_PORT
-import directoryservice.network.Connections
 import java.io.File
 import java.io.FileOutputStream
 import java.io.ObjectInputStream
@@ -13,11 +11,14 @@ object DirectoryService {
     init {
         loadState()
     }
-
     fun saveState() {
         val fileOut = FileOutputStream("state.sav")
         val objOut = ObjectOutputStream(fileOut)
         objOut.writeObject(state)
+        objOut.flush()
+        objOut.close()
+        fileOut.flush()
+        fileOut.close()
     }
 
     fun loadState() {

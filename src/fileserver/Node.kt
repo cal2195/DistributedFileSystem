@@ -18,6 +18,10 @@ class Node(val serverAddress: String, val address: String, val port: Int) {
         val fileOut = FileOutputStream("state.sav")
         val objOut = ObjectOutputStream(fileOut)
         objOut.writeObject(state)
+        objOut.flush()
+        objOut.close()
+        fileOut.flush()
+        fileOut.close()
     }
 
     fun loadState() {
@@ -29,6 +33,8 @@ class Node(val serverAddress: String, val address: String, val port: Int) {
             }
             else -> State()
         }
+
+        saveState()
 
         val data = File("data")
         data.mkdir()
