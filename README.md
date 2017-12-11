@@ -8,6 +8,10 @@ This is my distributed file system project consisting of
 - Client API - includes *caching*
 - A fuse client which implements the API (really cool! :D) - *transparent access*
 
+Files and folders both work, as well as text and binary data! :D
+
+Make sure you have a go with the FUSE filesystem!
+
 ## Directory Service
 
 The directory service accepts two types of clients - file servers and user clients.
@@ -57,6 +61,37 @@ transparently access the filesystem! :D Emacs, vim, ranger etc. all work perfect
 
 I've only implemented a subset of the standard filesystem calls, so not everything works 100%, but could easily be
 added with more time! :)
+
+# Running
+
+This project is written in Kotlin. To compile, you'll need the kotlin complier! Alternatively, I've uploaded the latest release as a .jar file which can be run with any Java 8 JVM.
+
+## Directory Service
+
+To start the directory service, run:
+
+`java -jar DistributedFileSystem.jar dir`
+
+The service runs on the well known port 8768.
+
+This needs to be started first!
+
+## File Servers
+
+To start file servers, run:
+
+`java -jar DistributedFileSystem.jar file [directory service ip] [my ip] [my port]`
+
+You can start as many as these as you'd like! :)
+
+## FUSE Client
+
+To mount a fuse client (tested on Linux with FUSE installed), run:
+
+`java -jar DistributedFileSystem.jar fuse [mount point path] [directory service ip]`
+
+This will mount the file system at *mount point path*, allowing you to `cd` in and perform normal file system
+operations with your shell, or any application on your system!
 
 Any questions, just ask!
 
