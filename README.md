@@ -4,11 +4,9 @@ Hello there!
 
 This is my distributed file system project consisting of
 - A Directory Service
-- File Servers
-- Client API
-- A fuse client which implements the API (really cool! :D)
-
-For the features, I also implemented caching and replication among file servers!
+- File Servers - includes *replication*
+- Client API - includes *caching*
+- A fuse client which implements the API (really cool! :D) - *transparent access*
 
 ## Directory Service
 
