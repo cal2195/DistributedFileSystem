@@ -66,6 +66,8 @@ added with more time! :)
 
 This project is written in Kotlin. To compile, you'll need the kotlin complier! Alternatively, I've uploaded the latest release as a .jar file which can be run with any Java 8 JVM.
 
+See the latest releases here: https://github.com/cal2195/DistributedFileSystem/releases
+
 ## Directory Service
 
 To start the directory service, run:
