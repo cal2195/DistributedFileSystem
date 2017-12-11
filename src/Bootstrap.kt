@@ -21,6 +21,6 @@ fun main(args: Array<String>) {
 
     if (args[0] == "fuse") {
         val client = Client()
-        client.init(args[1], ConnectionAddress(args[2], args[3].toInt()))
+        client.init(args[1], ConnectionAddress(args[2], SERVER_PORT))
     }
 }
